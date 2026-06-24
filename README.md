@@ -1,6 +1,13 @@
 # RecipeGPT
 The second iteration of RecipeGPT, this time built for the web which will also be expanded to mobile
 
+## Live Demo
+
+| | URL |
+|---|---|
+| **Frontend** | https://recipegpt2-5018.web.app |
+| **Backend** | https://springboot-service-urlhgvcpiq-uc.a.run.app |
+
 ## Team
 
 - Mohamad-Mario Sakka - mohamad.mario.sakka@gmail.com
