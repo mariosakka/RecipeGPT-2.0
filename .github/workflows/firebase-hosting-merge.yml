@@ -65,7 +65,7 @@ jobs:
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_RECIPEGPT_7D00C }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_RECIPEGPT2_5018 }}
           channelId: live
-          projectId: recipegpt-7d00c
+          projectId: recipegpt2-5018
           entryPoint: ./RecipeGPT2_Frontend
