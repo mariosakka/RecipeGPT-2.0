@@ -22,15 +22,17 @@ jobs:
           npm ci
           npm run build
 
-      - name: Deploy to Firebase Hosting
-        id: firebase_deploy
-        uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
         with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_RECIPEGPT2_5018 }}
-          channelId: live
-          projectId: recipegpt2-5018
-          entryPoint: ./RecipeGPT2_Frontend
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_RECIPEGPT2_5018 }}
+
+      - name: Deploy to Firebase Hosting
+        working-directory: ./RecipeGPT2_Frontend
+        run: |
+          npx firebase-tools@latest deploy --only hosting \
+            --project recipegpt2-5018 \
+            --non-interactive
 
       - name: Print deployment URLs
         run: |

@@ -9,11 +9,8 @@ permissions:
 
 jobs:
   build_and_preview:
-    # only run on PRs from this repo
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
-
-    # pull in your environment-scoped secrets
     environment: React-App
 
     steps:
@@ -24,18 +21,18 @@ jobs:
         env:
           VITE_SERVER_URL: ${{ vars.VITE_SERVER_URL }}
         run: |
-          # inject the server URL
           echo "VITE_SERVER_URL=${VITE_SERVER_URL}" > .env
-
           npm ci
           npm run build
 
-      - name: Deploy to Firebase Hosting preview
-        uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
         with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_RECIPEGPT2_5018 }}
-          projectId: recipegpt2-5018
-          # deploy to a PR-specific preview channel
-          channelId: pr${{ github.event.pull_request.number }}
-          entryPoint: ./RecipeGPT2_Frontend
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_RECIPEGPT2_5018 }}
+
+      - name: Deploy preview to Firebase Hosting
+        working-directory: ./RecipeGPT2_Frontend
+        run: |
+          npx firebase-tools@latest hosting:channel:deploy pr${{ github.event.pull_request.number }} \
+            --project recipegpt2-5018 \
+            --non-interactive
