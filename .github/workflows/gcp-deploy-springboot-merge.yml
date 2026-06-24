@@ -84,3 +84,19 @@ jobs:
             --service-account "${{ secrets.GCP_SPRINGBOOT_DEPLOYMENT_SA_NAME }}" \
             --set-env-vars "GOOGLE_APPLICATION_CREDENTIALS=/app/credentials/firebase-admin.json" \
             --allow-unauthenticated
+
+      - name: Print deployment URLs
+        run: |
+          SERVICE_URL=$(gcloud run services describe springboot-service \
+            --platform managed \
+            --region "${{ vars.GCP_LOCATION }}" \
+            --project "${{ vars.GCP_PROJECT_ID }}" \
+            --format "value(status.url)")
+          echo "=========================================="
+          echo "  DEPLOYMENT COMPLETE"
+          echo "=========================================="
+          echo "  Backend (Cloud Run):"
+          echo "    $SERVICE_URL"
+          echo "  Frontend (Firebase Hosting):"
+          echo "    https://recipegpt2-5018.web.app"
+          echo "=========================================="
