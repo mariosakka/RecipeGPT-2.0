@@ -25,22 +25,15 @@ jobs:
           npm ci
           npm run build
 
-      - name: Write Firebase service account key
-        env:
-          SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_RECIPEGPT2_5018 }}
-        run: |
-          echo "$SA_KEY" > /tmp/firebase-sa.json
-          echo "--- Validating SA key file ---"
-          python3 -c "import json,sys; d=json.load(open('/tmp/firebase-sa.json')); print('type:', d.get('type')); print('project:', d.get('project_id')); print('client_email:', d.get('client_email'))"
-
       - name: Deploy to Firebase Hosting
         working-directory: ./RecipeGPT2_Frontend
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: /tmp/firebase-sa.json
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: |
           npx firebase-tools@latest deploy --only hosting \
             --project recipegpt2-5018 \
-            --non-interactive
+            --non-interactive \
+            --token "$FIREBASE_TOKEN"
 
       - name: Update README with live URLs
         run: |
