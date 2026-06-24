@@ -22,13 +22,14 @@ jobs:
           npm ci
           npm run build
 
-      - name: Authenticate to GCP
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_RECIPEGPT2_5018 }}
+      - name: Write Firebase service account key
+        run: |
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_RECIPEGPT2_5018 }}' > /tmp/firebase-sa.json
 
       - name: Deploy to Firebase Hosting
         working-directory: ./RecipeGPT2_Frontend
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: /tmp/firebase-sa.json
         run: |
           npx firebase-tools@latest deploy --only hosting \
             --project recipegpt2-5018 \
